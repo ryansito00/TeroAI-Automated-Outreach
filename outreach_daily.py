@@ -46,8 +46,6 @@ def clean(text: str) -> str:
         text
         .replace("\u2014", ",")   # em dash
         .replace("\u2013", "-")   # en dash
-        .replace("â€"", ",")      # mojibake em dash
-        .replace("â€"", "-")      # mojibake en dash
     )
 
 # -- TeroAI system context ----------------------------------------------------
