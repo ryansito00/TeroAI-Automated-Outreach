@@ -2,11 +2,13 @@
 TeroAI - Daily Outreach Script
 Processes BATCH_SIZE leads per run, saves progress, creates Gmail drafts.
 Usage:
-  python outreach_daily.py
+  python outreach_daily.py                  # resumes from last saved row
+  python outreach_daily.py --start-row 100  # force start at row 101 (0-indexed: 100)
 Set before running:
   set ANTHROPIC_API_KEY=sk-ant-...
   Place credentials.json in ~/.teroai/credentials.json
 """
+import argparse
 import csv
 import json
 import base64
@@ -345,13 +347,24 @@ def create_reply_draft(service, to_email: str, subject: str, body: str, thread_i
 
 # -- Main ---------------------------------------------------------------------
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--start-row", type=int, default=None,
+                        help="Override progress and start at this 0-indexed row (e.g. 100 = lead 101)")
+    args = parser.parse_args()
+
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
         raise SystemExit("ERROR: ANTHROPIC_API_KEY not set. Run: set ANTHROPIC_API_KEY=sk-ant-...")
 
     ai_client = anthropic.Anthropic(api_key=api_key)
-    progress  = load_progress()
-    start_row = progress["last_row"]
+
+    if args.start_row is not None:
+        start_row = args.start_row
+        save_progress(start_row)
+        print(f"Progress reset to row {start_row} (lead {start_row + 1}).")
+    else:
+        progress  = load_progress()
+        start_row = progress["last_row"]
 
     with open(LEADS_FILE, newline="", encoding="utf-8-sig") as f:
         all_rows = list(csv.DictReader(f))
