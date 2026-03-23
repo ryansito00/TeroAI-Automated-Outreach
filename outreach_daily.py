@@ -381,7 +381,7 @@ def main():
         fname   = (row.get("first_name") or row.get("First Name", "there")).strip()
         lname   = (row.get("last_name") or row.get("Last Name", "")).strip()
         company = (row.get("company") or row.get("Company Name for Emails") or row.get("Company Name", "")).strip()
-        subject = f"TeroAI + {company}"
+        subject = "Geospatial Insights without the complexity"
         status  = row.get("status", "new").strip().lower()
 
         if not email:
@@ -409,22 +409,16 @@ def main():
         # -- Email 1 ----------------------------------------------------------
         body1 = (
             f"Hello {fname},\n\n"
-            "I lead sales at TeroAI, a geospatial data platform built to make complex "
-            "location-based insights accessible without the need for GIS expertise or "
-            "heavy infrastructure.\n\n"
-            "We've developed a patented system that unifies fragmented geographic, "
-            "demographic, and economic data into a single interface, allowing teams to "
-            "query and act on it in plain language or integrate it directly via API. "
-            "In practice, this means faster decision-making across areas like site "
-            "selection, market analysis, targeting, and localized strategy.\n\n"
-            "What tends to resonate most is how quickly teams can go from question to "
-            "insight, without relying on multiple tools, analysts, or stitched datasets. "
-            f"{paragraph}\n\n"
-            f"On paper it feels like we'd be a value-add for {company}. If you agree "
-            "or think it makes sense to learn a bit more, would you be open to a 15-20 "
-            "minute intro sometime this week or early next?\n\n"
+            "I lead sales at TeroAI, a geospatial data platform that makes "
+            "location-based insights accessible without GIS expertise or heavy setup.\n\n"
+            "We've built a patented system that unifies geographic, demographic, and "
+            "economic data into one interface, so teams can query in plain language or "
+            "via API, without stitching datasets together.\n\n"
+            "What tends to resonate is how quickly teams can go from question to "
+            f"insight. {paragraph}\n\n"
+            f"On paper it feels like we'd be a value-add for {company}. Would you be "
+            "open to a 15-minute intro this week or next?\n\n"
             "Best,\n\nRyan\n"
-            "Geospatial Insights without the complexity\n"
         )
 
         create_draft(service, email, subject, body1, signature_html)
