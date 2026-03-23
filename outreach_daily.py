@@ -148,31 +148,33 @@ def generate_outreach_paragraph(client: anthropic.Anthropic, row: dict) -> str:
     title_angle = get_title_angle(title)
 
     prompt = f"""
-Write two short paragraphs for a cold outreach email, separated by a blank line.
-Paragraph 1 (1-2 sentences): Start with something specific about {company} or
-this person's role that creates a natural opening. Ground it in what they actually do.
-Paragraph 2 (1-2 sentences): Connect TeroAI's geospatial intelligence to a specific
-use case or need that someone in this role at this company would care about. Be concrete.
+Write exactly 1 sentence to complete this thought in a cold outreach email:
+
+"What tends to resonate most is how quickly teams can go from question to insight,
+without relying on multiple tools, analysts, or stitched datasets. [YOUR SENTENCE HERE]"
+
+Your sentence should make this feel personally relevant to this specific person at
+this specific company. Reference something real about what they do or care about.
+
 LEAD:
 - Name: {first_name}
 - Title: {title}
 - Company: {company}
 - Industry: {industry}
 - Company keywords/tags: {keywords}
-ROLE ANGLE - because this person holds the title "{title}", connect the value
-proposition specifically to what someone in that role cares about:
+ROLE ANGLE for "{title}":
 {title_angle}
+
 RULES:
-1. Two paragraphs, each 1-2 sentences. Keep both tight.
-2. Do NOT include a call to action (handled separately).
-3. Do NOT start with "I" or "TeroAI". Start paragraph 1 with the company or their work.
-4. No fluff. No filler. Peer-to-peer tone.
-5. Do NOT use em dashes or en dashes. Use commas or rewrite instead.
-6. Separate the two paragraphs with a blank line.
+1. Exactly 1 sentence. Conversational, not pitchy.
+2. Do NOT reintroduce TeroAI or include a CTA.
+3. Do NOT start with "I" or "TeroAI".
+4. Do NOT use em dashes or en dashes. Use commas or rewrite instead.
+5. Peer-to-peer tone. No filler.
 """
     response = client.messages.create(
         model="claude-haiku-4-5",
-        max_tokens=256,
+        max_tokens=150,
         system=TEROAI_SYSTEM,
         messages=[{"role": "user", "content": prompt}],
     )
@@ -407,11 +409,22 @@ def main():
         # -- Email 1 ----------------------------------------------------------
         body1 = (
             f"Hello {fname},\n\n"
-            "I lead sales at TeroAI, the world's only geospatial data company built "
-            "for a general audience.\n\n"
+            "I lead sales at TeroAI, a geospatial data platform built to make complex "
+            "location-based insights accessible without the need for GIS expertise or "
+            "heavy infrastructure.\n\n"
+            "We've developed a patented system that unifies fragmented geographic, "
+            "demographic, and economic data into a single interface, allowing teams to "
+            "query and act on it in plain language or integrate it directly via API. "
+            "In practice, this means faster decision-making across areas like site "
+            "selection, market analysis, targeting, and localized strategy.\n\n"
+            "What tends to resonate most is how quickly teams can go from question to "
+            "insight, without relying on multiple tools, analysts, or stitched datasets. "
             f"{paragraph}\n\n"
-            "If this sounds interesting & useful, would love to find time to connect next week.\n\n"
+            f"On paper it feels like we'd be a value-add for {company}. If you agree "
+            "or think it makes sense to learn a bit more, would you be open to a 15-20 "
+            "minute intro sometime this week or early next?\n\n"
             "Best,\n\nRyan\n"
+            "Geospatial Insights without the complexity\n"
         )
 
         create_draft(service, email, subject, body1, signature_html)
